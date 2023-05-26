@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: orderingMinAppAip
+  profiles:
+    active: @activatedEnv@
