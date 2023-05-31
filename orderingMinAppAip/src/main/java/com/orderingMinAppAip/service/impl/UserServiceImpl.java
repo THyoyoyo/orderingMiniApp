@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
+
     @Autowired
     UserInfoMapper userInfoMapper;
 
@@ -16,5 +17,10 @@ public class UserServiceImpl implements UserService {
     public UserInfo getUserInfoById(Integer userId) {
         UserInfo userInfo = userInfoMapper.selectById(userId);
         return userInfo;
+    }
+
+    @Override
+    public void upUserInfo(UserInfo userInfo) {
+        userInfoMapper.updateById(userInfo);
     }
 }

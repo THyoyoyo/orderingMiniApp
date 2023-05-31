@@ -46,7 +46,7 @@ public class LoginController {
 
         //判断是否更新token
         if (!JWTUtil.verify(userInfo.getToken())){
-            String token = JWTUtil.generateToken(userInfo.getId(), ip);
+            String token = JWTUtil.generateToken(userInfo.getName(),userInfo.getId(), ip);
             userInfo.setToken(token);
         }
 

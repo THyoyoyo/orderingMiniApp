@@ -17,7 +17,7 @@ public class JWTUtil {
     /**
         * 生成签名
         */
-    public static String generateToken(Integer userId,String ip){
+    public static String generateToken(String userName, Integer userId,String ip){
         Date now = new Date();
         Algorithm algorithm = Algorithm.HMAC256(JwtConstants.SECRET_KEY); //算法
         String token = JWT.create()
@@ -26,6 +26,7 @@ public class JWTUtil {
                 .withExpiresAt(new Date(now.getTime() + JwtConstants.TOKEN_EXPIRE_TIME * 1000)) //过期时间
                 .withClaim("userId", userId.toString()) //保存身份标识
                 .withClaim("ip", ip) //保存当前的IP
+                .withClaim("userName", userName) //保存当前的IP
                 .sign(algorithm);
         return token;
     }
@@ -82,6 +83,14 @@ public class JWTUtil {
         */
     public static Integer getUserId(String token) throws Exception{
         return Integer.parseInt(JWT.decode(token).getClaim("userId").asString());
+    }
+
+
+    /**
+        * 从token获取userName
+        */
+    public static String getUserName(String token) throws Exception{
+        return JWT.decode(token).getClaim("userName").asString();
     }
 
 

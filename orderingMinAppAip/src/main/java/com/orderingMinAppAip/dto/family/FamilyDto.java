@@ -1,33 +1,13 @@
-package com.orderingMinAppAip.model.family;
+package com.orderingMinAppAip.dto.family;
 
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import java.io.Serializable;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import io.swagger.annotations.ApiModelProperty;
-import java.util.Date;
-
-/**
- * 数据库映射类
- * 对应表名: family
- * @author 映射类自动生成器-LXY
- */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@TableName("family")
-public class Family implements Serializable {
-	private static final long serialVersionUID = 1L;
-
+public class FamilyDto implements Serializable {
 	/** 自增ID */
 	@ApiModelProperty(value = "自增ID")
-	@TableId(type = IdType.AUTO)
 	private Integer id;
 
 	/** 家庭名称 */
@@ -45,13 +25,5 @@ public class Family implements Serializable {
 	/** 其他信息 */
 	@ApiModelProperty(value = "其他信息")
 	private String otherInfo;
-
-	/** 创建者 */
-	@ApiModelProperty(value = "创建者")
-	private Integer creatorUserId;
-
-	/** 创建时间 */
-	@ApiModelProperty(value = "创建时间")
-	private Date creatorTime;
 
 }

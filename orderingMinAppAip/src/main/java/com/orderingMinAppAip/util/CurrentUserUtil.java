@@ -20,4 +20,19 @@ public class CurrentUserUtil {
         }
         return JWTUtil.getUserId(jwtToken);
     }
+
+
+
+
+    public static String getUserName() throws Exception{
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String jwtToken = CookieUtil.getValue(request, JwtConstants.COOKIE_TOKEN);
+        if (jwtToken == null){
+            return null;
+        }
+        if(jwtToken.isEmpty()){
+            return null;
+        }
+        return JWTUtil.getUserName(jwtToken);
+    }
 }
