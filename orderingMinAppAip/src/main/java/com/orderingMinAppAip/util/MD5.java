@@ -1,4 +1,4 @@
-package com.blogs.util;
+package com.orderingMinAppAip.util;
 
 import java.io.*;
 import java.security.MessageDigest;

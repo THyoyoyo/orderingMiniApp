@@ -1,4 +1,4 @@
-package com.blogs.util;
+package com.orderingMinAppAip.util;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

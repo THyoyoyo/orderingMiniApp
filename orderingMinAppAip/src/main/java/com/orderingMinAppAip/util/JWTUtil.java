@@ -1,11 +1,16 @@
-package com.blogs.util;
+package com.orderingMinAppAip.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.blogs.constants.JwtConstants;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.orderingMinAppAip.constants.JwtConstants;
+import com.orderingMinAppAip.exception.authorityException;
+
 
 import java.util.Date;
+import java.util.Map;
 
 public class JWTUtil {
 
@@ -30,11 +35,41 @@ public class JWTUtil {
         */
     public static boolean verify(String token){
         try {
+            if(token == "" || token ==null){
+                return false; // 令牌无
+            }
             Algorithm algorithm = Algorithm.HMAC256(JwtConstants.SECRET_KEY); //算法
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer(JwtConstants.ISSUER)
                     .build();
             verifier.verify(token);
+
+            DecodedJWT decodedJWT = verifier.verify(token);
+
+            // 获取令牌的相关信息
+            Map<String, Claim> claims = decodedJWT.getClaims();
+
+            // 验证过期时间
+            Claim expirationClaim = claims.get("exp");
+
+            if (expirationClaim != null) {
+                Date expirationDate = expirationClaim.asDate();
+                Date now = new Date();
+                if (expirationDate.before(now)) {
+                    return false; // 令牌已过期
+                }
+            }
+
+            // 验证生效时间
+            Claim notBeforeClaim = claims.get("nbf");
+            if (notBeforeClaim != null) {
+                Date notBeforeDate = notBeforeClaim.asDate();
+                Date now = new Date();
+                if (notBeforeDate.after(now)) {
+                    return false; // 令牌尚未生效
+                }
+            }
+
             return true;
         } catch (Exception ex){
             ex.printStackTrace();

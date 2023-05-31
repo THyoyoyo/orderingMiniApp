@@ -1,4 +1,4 @@
-package com.blogs.util;
+package com.orderingMinAppAip.util;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
@@ -8,8 +8,6 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;

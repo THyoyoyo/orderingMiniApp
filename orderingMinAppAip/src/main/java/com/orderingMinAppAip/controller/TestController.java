@@ -34,6 +34,7 @@ public class TestController {
 
     @GetMapping("/getTest")
     @ApiOperation("测试获取")
+    @Token
     public R getTest(){
         List<Test> tests = testMapper.selectList(null);
         return R.succeed(tests);

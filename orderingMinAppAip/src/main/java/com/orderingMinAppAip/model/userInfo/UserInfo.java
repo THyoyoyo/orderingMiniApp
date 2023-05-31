@@ -34,6 +34,19 @@ public class UserInfo implements Serializable {
 	@ApiModelProperty(value = "昵称")
 	private String name;
 
+
+	/** 账号 */
+	@ApiModelProperty(value = "账号")
+	private String account;
+
+	/** 密码 */
+	@ApiModelProperty(value = "密码")
+	private String password;
+
+	/** token */
+	@ApiModelProperty(value = "token")
+	private String token;
+
 	/** 头像 */
 	@ApiModelProperty(value = "头像")
 	private String head;
@@ -49,6 +62,10 @@ public class UserInfo implements Serializable {
 	/** 创建时间 */
 	@ApiModelProperty(value = "创建时间")
 	private Date creatorTime;
+
+	/** 更新时间 */
+	@ApiModelProperty(value = "更新时间")
+	private Date upTime;
 
 	/** 状态：（0：禁用  1：启动） */
 	@ApiModelProperty(value = "状态：（0：禁用  1：启动）")

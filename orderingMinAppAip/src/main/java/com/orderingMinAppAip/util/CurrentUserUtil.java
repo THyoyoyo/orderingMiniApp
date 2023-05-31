@@ -1,7 +1,6 @@
-package com.blogs.util;
+package com.orderingMinAppAip.util;
 
-import com.blogs.constants.JwtConstants;
-import org.springframework.util.StringUtils;
+import com.orderingMinAppAip.constants.JwtConstants;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 

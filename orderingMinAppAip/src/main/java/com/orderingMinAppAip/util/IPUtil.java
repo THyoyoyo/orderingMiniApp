@@ -1,4 +1,4 @@
-package com.blogs.util;
+package com.orderingMinAppAip.util;
 
 import net.ipip.ipdb.City;
 import net.ipip.ipdb.CityInfo;
