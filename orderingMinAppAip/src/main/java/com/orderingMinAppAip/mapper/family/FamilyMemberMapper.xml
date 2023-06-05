@@ -5,14 +5,13 @@
 <mapper namespace="com.orderingMinAppAip.mapper.family.FamilyMemberMapper">
 
 
-    <select id="getFamilys" resultType="java.util.Map">
+    <select id="getGuestFamilys" resultType="java.util.Map">
         SELECT
             fm.identity_type as identityType ,
             f.`name` as familyName,
             f.address,
             f.head,
             f.other_info as otherInfo,
-            IF(fm.identity_type != 3,f.invitation_code,null) AS invitationCode,
             f.creator_user_id as creatorUserId,
             ui.`name` as creatorUserName
         FROM
@@ -20,7 +19,24 @@
             LEFT JOIN family as f ON fm.family_id = f.id
             LEFT JOIN user_info AS ui ON ui.id = f.creator_user_id
         WHERE
-            fm.member_id = #{userId}
+            fm.member_id = #{userId} and fm.identity_type = 3
     </select>
 
+
+    <select id="getFamilymember" resultType="java.util.Map">
+        SELECT
+           fm.member_id as memberId,
+           fm.family_id as familyId,
+           fm.name_remark as nameRemark,
+           fm.visit_time,
+           ui.`name` as userName,
+           ui.phone,
+           ui.name,
+           ui.up_time as upTime
+        FROM
+            family_member as fm
+            LEFT JOIN user_info AS ui ON ui.id = fm.member_id
+        WHERE
+            fm.family_id = #{familyId}
+    </select>
 </mapper>

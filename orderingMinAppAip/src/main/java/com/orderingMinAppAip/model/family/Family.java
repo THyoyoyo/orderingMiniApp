@@ -47,8 +47,12 @@ public class Family implements Serializable {
 	private String otherInfo;
 
 	/** 邀请码 */
-	@ApiModelProperty(value = "邀请码")
+	@ApiModelProperty(value = "成员-邀请码")
 	private Integer invitationCode;
+
+	/** 访客-邀请码 */
+	@ApiModelProperty(value = "访客-邀请码")
+	private Integer guestInvitationCode;
 
 	/** 创建者 */
 	@ApiModelProperty(value = "创建者")

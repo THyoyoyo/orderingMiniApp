@@ -5,4 +5,25 @@
 <mapper namespace="com.orderingMinAppAip.mapper.family.FamilyMapper">
 
 
+
+ <select id="getFamilyByIdInfo" resultType="java.util.Map">
+     SELECT
+         f.id,
+         f.`name`,
+         f.address,
+         f.head,
+         f.other_info,
+         f.invitation_code,
+         f.guest_invitation_code,
+         f.creator_user_id,
+         f.creator_time,
+         ui.`name` as userName,
+         ui.phone as userPhone
+     FROM
+         family AS f
+             LEFT JOIN user_info as ui on f.creator_user_id = ui.id
+     WHERE
+         f.id = #{id}
+ </select>
+
 </mapper>

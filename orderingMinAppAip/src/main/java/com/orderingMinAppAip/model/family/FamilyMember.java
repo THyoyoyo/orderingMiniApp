@@ -46,4 +46,14 @@ public class FamilyMember implements Serializable {
 	@ApiModelProperty(value = "加入时间")
 	private Date creatorTime;
 
+
+	/** 访问日期 */
+	@ApiModelProperty(value = "访问日期")
+	private Date visitTime;
+
+
+	/** 家庭组用户备注 */
+	@ApiModelProperty(value = "家庭组用户备注")
+	private String nameRemark;
+
 }

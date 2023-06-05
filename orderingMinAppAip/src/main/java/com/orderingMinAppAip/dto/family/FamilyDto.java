@@ -26,4 +26,15 @@ public class FamilyDto implements Serializable {
 	@ApiModelProperty(value = "其他信息")
 	private String otherInfo;
 
+
+
+	/** 邀请码 */
+	@ApiModelProperty(value = "成员-邀请码")
+	private Integer invitationCode;
+
+
+	/** 访客-邀请码 */
+	@ApiModelProperty(value = "访客-邀请码")
+	private Integer guestInvitationCode;
+
 }

@@ -3,6 +3,7 @@ package com.orderingMinAppAip.service;
 import com.orderingMinAppAip.model.family.Family;
 import com.orderingMinAppAip.model.family.FamilyMember;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,17 +17,19 @@ public interface FamilyService {
     /**
      * 加入一个家庭
      * */
-    Boolean joinFamily(Integer familyId, Integer memberId,Integer identityType,Integer invitationCode);
+    void joinFamily(Integer familyId, Integer memberId, Integer identityType, Date visitTime);
 
+
+    FamilyMember  isJoinFamily(Integer familyId, Integer memberId);
 
     /**
-     * 是否已加入一个家庭
+     * 成员是否已加入一个家庭
      * */
     FamilyMember JoinNot(Integer userId);
 
 
     /**
-     * 判读访客是否已加入
+     * 判读是否存在于家庭组中 包含访客
      * */
     FamilyMember JoinNotVisitor(Integer familyId,Integer userId);
 
@@ -34,5 +37,5 @@ public interface FamilyService {
     /**
      *  获取已加入的家庭
      * */
-    List<Map<String, Object>> getFamilys() throws Exception;
+    List<Map<String, Object>> getGuestFamilys() throws Exception;
 }

@@ -34,12 +34,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public Boolean joinFamily(Integer familyId, Integer memberId, Integer identityType, Integer invitationCode) {
-
-        Family familyByInfo= this.getFamilyById(familyId);
-        if(!familyByInfo.getInvitationCode().equals(invitationCode)){
-            return false;
-        }
+    public void joinFamily(Integer familyId, Integer memberId, Integer identityType,Date visitTime) {
 
 
         FamilyMember familyMember = new FamilyMember();
@@ -47,14 +42,23 @@ public class FamilyServiceImpl implements FamilyService {
         familyMember.setMemberId(memberId);
         familyMember.setIdentityType(identityType);
         familyMember.setCreatorTime(new Date());
-
+        if(identityType.equals(FamilyMemberIdentityTypeEnum.VISITOR.getCode())){
+            familyMember.setVisitTime(visitTime);
+        }
         familyMemberMapper.insert(familyMember);
-        return true;
+    }
+
+    @Override
+    public FamilyMember isJoinFamily(Integer familyId, Integer memberId) {
+        QueryWrapper<FamilyMember> familyMemberMapperQueryWrapper = new QueryWrapper<>();
+        familyMemberMapperQueryWrapper.eq("family_id",familyId).eq("member_id", memberId).last("limit 0,1");
+        FamilyMember familyMember = familyMemberMapper.selectOne(familyMemberMapperQueryWrapper);
+        return familyMember;
+
     }
 
     @Override
     public FamilyMember JoinNot(Integer userId) {
-
         QueryWrapper<FamilyMember> familyMemberMapperQueryWrapper = new QueryWrapper<>();
         familyMemberMapperQueryWrapper.eq("member_id", userId).ne("identity_type",FamilyMemberIdentityTypeEnum.VISITOR.getCode()).last("limit 0,1");
         FamilyMember familyMember = familyMemberMapper.selectOne(familyMemberMapperQueryWrapper);
@@ -71,8 +75,9 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public  List<Map<String, Object>> getFamilys() throws Exception {
+    public  List<Map<String, Object>> getGuestFamilys() throws Exception {
         Integer userId = CurrentUserUtil.getUserId();
-        return familyMemberMapper.getFamilys(userId);
+        return familyMemberMapper.getGuestFamilys(userId);
     }
+
 }

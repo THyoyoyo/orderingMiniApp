@@ -11,7 +11,10 @@ import java.util.Map;
 @Mapper
 public interface FamilyMemberMapper extends BaseMapper<FamilyMember> {
 
+   //获自己的访客列表
+   List<Map<String,Object>> getGuestFamilys(@Param("userId") Integer userId);
 
-   List<Map<String,Object>> getFamilys(@Param("userId") Integer userId);
+   //获取家庭成员
+   List<Map<String,Object>> getFamilymember(@Param("familyId") Integer familyId);
 
 }
