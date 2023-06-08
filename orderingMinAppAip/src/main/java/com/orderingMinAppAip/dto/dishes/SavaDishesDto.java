@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class SavaDishes {
+public class SavaDishesDto {
     /** 自增ID */
     @ApiModelProperty(value = "自增ID")
     @TableId(type = IdType.AUTO)
@@ -23,6 +23,10 @@ public class SavaDishes {
     /** 菜名 */
     @ApiModelProperty(value = "菜名")
     private String name;
+
+    /** 分类id */
+    @ApiModelProperty(value = "分类id")
+    private Integer dishesClassId;
 
     /** 简介 */
     @ApiModelProperty(value = "简介")

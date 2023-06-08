@@ -8,8 +8,6 @@ import com.orderingMinAppAip.model.family.Family;
 import com.orderingMinAppAip.model.family.FamilyMember;
 import com.orderingMinAppAip.service.FamilyService;
 import com.orderingMinAppAip.util.CurrentUserUtil;
-import com.orderingMinAppAip.vo.common.R;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +50,15 @@ public class FamilyServiceImpl implements FamilyService {
     public FamilyMember isJoinFamily(Integer familyId, Integer memberId) {
         QueryWrapper<FamilyMember> familyMemberMapperQueryWrapper = new QueryWrapper<>();
         familyMemberMapperQueryWrapper.eq("family_id",familyId).eq("member_id", memberId).last("limit 0,1");
+        FamilyMember familyMember = familyMemberMapper.selectOne(familyMemberMapperQueryWrapper);
+        return familyMember;
+
+    }
+    @Override
+    public FamilyMember isJoinFamily(Integer familyId) throws Exception {
+        Integer userId = CurrentUserUtil.getUserId();
+        QueryWrapper<FamilyMember> familyMemberMapperQueryWrapper = new QueryWrapper<>();
+        familyMemberMapperQueryWrapper.eq("family_id",familyId).eq("member_id", userId).last("limit 0,1");
         FamilyMember familyMember = familyMemberMapper.selectOne(familyMemberMapperQueryWrapper);
         return familyMember;
 

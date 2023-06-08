@@ -5,4 +5,27 @@
 <mapper namespace="com.orderingMinAppAip.mapper.dishes.DishesMapper">
 
 
+    <sql id="where">
+        <where>
+            <if test="params.dishesClassId != null and params.dishesClassId != ''">
+                and  di.dishes_class_id = #{params.dishesClassId}
+            </if>
+
+             <if test="params.familyId != null and params.familyId != ''">
+                and  d.family_id = #{params.familyId}
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="getList" resultType="com.orderingMinAppAip.vo.dishes.DishesSearchVo" parameterType="Map">
+
+        SELECT
+            d.*
+        FROM
+            dishes_info as di
+            LEFT JOIN dishes as d on di.dishes_id = d.id
+        <include refid="where" />
+    </select>
+
 </mapper>

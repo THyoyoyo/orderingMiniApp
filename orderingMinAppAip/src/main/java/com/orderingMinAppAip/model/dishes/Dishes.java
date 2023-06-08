@@ -47,7 +47,7 @@ public class Dishes implements Serializable {
 
 	/** 喜爱（0：未设置，1：设置） */
 	@ApiModelProperty(value = "喜爱（0：未设置，1：设置）")
-	private Integer like;
+	private Integer userLike;
 
 	/** 制作教程（流程） */
 	@ApiModelProperty(value = "制作教程（流程）")
@@ -69,5 +69,15 @@ public class Dishes implements Serializable {
 	/** 创建人ID */
 	@ApiModelProperty(value = "创建人ID")
 	private Integer creatorUserId;
+
+
+	/** 难度等级（1：简单，2：一般，3:困难） */
+	@ApiModelProperty(value = "难度等级（1：简单，2：一般，3:困难）")
+	private Integer difficulty;
+
+
+	/** 预计耗时 */
+	@ApiModelProperty(value = "预计耗时")
+	private Integer timeConsuming;
 
 }

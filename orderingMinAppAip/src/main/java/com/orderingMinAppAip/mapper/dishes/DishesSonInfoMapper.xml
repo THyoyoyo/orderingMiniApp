@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.orderingMinAppAip.mapper.dishes.DishesSonInfoMapper">
+
+    <select id="getByDishesIdList" resultType="java.util.Map">
+        SELECT
+            dsi.*,
+            ds.`name` as dishesSonName
+        FROM
+            dishes_son_info as dsi
+            LEFT JOIN dishes_son as ds on dsi.dishes_son_id = ds.id
+        WHERE
+            dsi.dishes_id = #{dishesId}
+    </select>
+
+</mapper>

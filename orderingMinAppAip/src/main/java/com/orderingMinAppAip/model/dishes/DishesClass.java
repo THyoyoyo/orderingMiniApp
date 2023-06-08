@@ -39,6 +39,11 @@ public class DishesClass implements Serializable {
 	@ApiModelProperty(value = "分类名称")
 	private String name;
 
+	/** 状态 0：禁用 1：启用 */
+	@ApiModelProperty(value = "状态 0：禁用 1：启用")
+	private Integer status;
+
+
 	/** 创建时间 */
 	@ApiModelProperty(value = "创建时间")
 	private Date creatorTime;

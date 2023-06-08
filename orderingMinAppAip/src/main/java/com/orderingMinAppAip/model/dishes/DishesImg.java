@@ -1,7 +1,6 @@
 package com.orderingMinAppAip.model.dishes;
 
 import java.io.Serializable;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -13,28 +12,26 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 数据库映射类
- * 对应表名: dishes_son
+ * 对应表名: dishes_img
  * @author 映射类自动生成器-LXY
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("dishes_son")
-public class DishesSon implements Serializable {
-	private static final long serialVersionUID = 1L;
+@TableName("dishes_img")
+public class DishesImg implements Serializable {
 
 	/** 自增ID */
 	@ApiModelProperty(value = "自增ID")
 	@TableId(type = IdType.AUTO)
 	private Integer id;
 
-	/** 家庭ID */
-	@ApiModelProperty(value = "家庭ID")
-	private Integer familyId;
+	/** 图片地址 */
+	@ApiModelProperty(value = "图片地址")
+	private String img;
 
-	/** 食材名称 */
-	@ApiModelProperty(value = "食材名称")
-	private String name;
-
+	/** 菜品ID */
+	@ApiModelProperty(value = "菜品ID")
+	private Integer dishesId;
 }

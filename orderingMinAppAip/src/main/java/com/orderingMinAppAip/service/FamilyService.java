@@ -19,8 +19,15 @@ public interface FamilyService {
      * */
     void joinFamily(Integer familyId, Integer memberId, Integer identityType, Date visitTime);
 
-
+    /**
+     * 获取传入一个用户 家庭信息
+     * */
     FamilyMember  isJoinFamily(Integer familyId, Integer memberId);
+
+    /**
+     * 获取当前用户家庭信息
+     * */
+    FamilyMember isJoinFamily(Integer familyId) throws Exception;
 
     /**
      * 成员是否已加入一个家庭

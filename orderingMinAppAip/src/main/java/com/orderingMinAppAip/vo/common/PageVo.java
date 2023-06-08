@@ -1,4 +1,4 @@
-package com.blogs.vo.common;
+package com.orderingMinAppAip.vo.common;
 
 import lombok.Data;
 

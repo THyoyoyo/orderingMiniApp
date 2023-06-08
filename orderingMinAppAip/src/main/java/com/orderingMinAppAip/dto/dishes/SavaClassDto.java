@@ -1,13 +1,11 @@
 package com.orderingMinAppAip.dto.dishes;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class SavaClass {
+public class SavaClassDto {
 
     /** 自增id */
     @ApiModelProperty(value = "自增id")
