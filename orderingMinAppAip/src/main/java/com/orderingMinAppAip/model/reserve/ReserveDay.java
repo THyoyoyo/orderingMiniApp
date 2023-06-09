@@ -35,6 +35,16 @@ public class ReserveDay implements Serializable {
 	@ApiModelProperty(value = "预定日期")
 	private Date creator;
 
+	/** 状态：（0：取消，1：准备中，2：进行中，3：完成） */
+	@ApiModelProperty(value = "状态：（0：取消，1：准备中，2：进行中，3：完成）")
+	private Integer status;
+
+
+	/** 预约家庭ID */
+	@ApiModelProperty(value = "预约家庭ID")
+	private Integer familyId;
+
+
 	/** 创建时间 */
 	@ApiModelProperty(value = "创建时间")
 	private Date creatorTime;

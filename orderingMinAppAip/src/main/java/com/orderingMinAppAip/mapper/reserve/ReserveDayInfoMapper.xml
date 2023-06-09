@@ -4,4 +4,22 @@
 
 <mapper namespace="com.orderingMinAppAip.mapper.reserve.ReserveDayInfoMapper">
 
+    <select id="getByReserveDayIdList" resultType="com.orderingMinAppAip.vo.reserve.ReserveInfoItemVo">
+        SELECT rdi.id,
+               rdi.reserve_day_id as reserveDayId,
+               rdi.type,
+               rdi.`status`,
+               rdi.dishes_id      as dishesId,
+               rdi.creator_time   as creatorTime,
+               rd.creator,
+               rd.family_id       AS familyId,
+               d.`name`           as dishesName,
+               ui.`name`          as userName
+        FROM reserve_day_info AS rdi
+                 LEFT JOIN reserve_day AS rd ON rdi.reserve_day_id = rd.id
+                 LEFT JOIN dishes AS d ON rdi.dishes_id = d.id
+                 LEFT JOIN user_info AS ui ON rdi.creator_user_id = ui.id
+        WHERE rd.id = #{reserveDayId}
+    </select>
+
 </mapper>

@@ -20,6 +20,7 @@ import com.orderingMinAppAip.vo.common.R;
 import com.orderingMinAppAip.vo.dishes.DishesSearchVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -170,7 +171,7 @@ public class DishesController {
         return  R.succeed();
     }
 
-    
+
     @GetMapping("/info")
     @ApiOperation("根据ID获取菜品详情")
     @Token
@@ -199,5 +200,25 @@ public class DishesController {
         savaDishesDto.setDishesSonList(newDisheSonList);
 
         return R.succeed(savaDishesDto);
+    }
+
+
+    @GetMapping("/del")
+    @ApiOperation("/根据ID删除菜品")
+    @Token
+    public R delById(@RequestParam("familyId") Integer familyId, @RequestParam("id") Integer id) throws Exception {
+
+        // 分类归属查询
+        FamilyMember joinFamily = familyService.isJoinFamily(familyId);
+        if (joinFamily == null || joinFamily.getIdentityType().equals(FamilyMemberIdentityTypeEnum.VISITOR.getCode())) {
+            return R.failed(405, "你不属于该家庭！,能删除别人的菜品！");
+        }
+
+        dishesMapper.deleteById(id);
+
+        QueryWrapper<DishesInfo> dishesInfoQueryWrapper = new QueryWrapper<>();
+        dishesInfoQueryWrapper.eq("dishesId",id);
+        dishesInfoMapper.delete(dishesInfoQueryWrapper);
+        return  R.succeed();
     }
 }
