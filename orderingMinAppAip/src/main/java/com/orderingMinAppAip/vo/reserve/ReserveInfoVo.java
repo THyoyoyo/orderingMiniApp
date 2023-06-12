@@ -3,6 +3,7 @@ package com.orderingMinAppAip.vo.reserve;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.orderingMinAppAip.model.reserve.ReserveDayRemark;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -40,4 +41,8 @@ public class ReserveInfoVo {
     @ApiModelProperty(value = "夜宵")
     private List<ReserveInfoItemVo> midnight;
 
+
+    /** 备注 */
+    @ApiModelProperty(value = "备注")
+    private List<ReserveDayRemark> Remark;
 }

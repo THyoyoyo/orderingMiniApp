@@ -4,7 +4,7 @@ package com.orderingMinAppAip.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orderingMinAppAip.annotation.Token;
-import com.orderingMinAppAip.dto.dishes.GetClassListVDto;
+import com.orderingMinAppAip.dto.dishes.GetClassListDto;
 import com.orderingMinAppAip.dto.dishes.SavaClassDto;
 import com.orderingMinAppAip.dto.dishes.SavaDishesDto;
 import com.orderingMinAppAip.enums.CommTypeEnum;
@@ -122,7 +122,7 @@ public class DishesController {
     @PostMapping("/search")
     @ApiOperation("获取分类下的菜品")
     @Token
-    public R getClassList(@RequestBody GetClassListVDto dto) throws Exception {
+    public R getClassList(@RequestBody GetClassListDto dto) throws Exception {
         // 分类归属查询
         FamilyMember joinFamily = familyService.isJoinFamily(dto.getFamilyId());
         if (joinFamily == null || joinFamily.getIdentityType().equals(FamilyMemberIdentityTypeEnum.VISITOR.getCode())) {

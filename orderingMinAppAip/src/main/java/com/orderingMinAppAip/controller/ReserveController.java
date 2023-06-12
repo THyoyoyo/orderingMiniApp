@@ -1,17 +1,26 @@
 package com.orderingMinAppAip.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orderingMinAppAip.annotation.Token;
+import com.orderingMinAppAip.dto.reserve.AddRemarkDto;
+import com.orderingMinAppAip.dto.reserve.ReserveListDto;
 import com.orderingMinAppAip.dto.reserve.ReserveSavaDto;
+import com.orderingMinAppAip.enums.ReserveStatusEnum;
 import com.orderingMinAppAip.enums.ReserveTimeTypeEnum;
 import com.orderingMinAppAip.mapper.reserve.ReserveDayInfoMapper;
 import com.orderingMinAppAip.mapper.reserve.ReserveDayMapper;
+import com.orderingMinAppAip.mapper.reserve.ReserveDayRemarkMapper;
 import com.orderingMinAppAip.model.family.FamilyMember;
 import com.orderingMinAppAip.model.reserve.ReserveDay;
 import com.orderingMinAppAip.model.reserve.ReserveDayInfo;
+import com.orderingMinAppAip.model.reserve.ReserveDayRemark;
 import com.orderingMinAppAip.service.FamilyService;
 import com.orderingMinAppAip.service.ReserveService;
 import com.orderingMinAppAip.util.CurrentUserUtil;
+import com.orderingMinAppAip.vo.common.PageVo;
 import com.orderingMinAppAip.vo.common.R;
+import com.orderingMinAppAip.vo.dishes.DishesSearchVo;
 import com.orderingMinAppAip.vo.reserve.ReserveInfoItemVo;
 import com.orderingMinAppAip.vo.reserve.ReserveInfoVo;
 import io.swagger.annotations.Api;
@@ -38,6 +47,9 @@ public class ReserveController {
 
     @Autowired
     ReserveDayInfoMapper reserveDayInfoMapper;
+
+    @Autowired
+    ReserveDayRemarkMapper reserveDayRemarkMapper;
 
     @PostMapping("/sava")
     @ApiOperation("新增编辑预约")
@@ -114,47 +126,73 @@ public class ReserveController {
         if (joinFamily == null) {
             return R.failed(405, "没有加入该家庭,无法查看当前预约");
         }
-        ReserveDay reserveDay = reserveDayMapper.selectById(id);
-
-        List<ReserveInfoItemVo> byReserveDayIdList = reserveDayInfoMapper.getByReserveDayIdList(id);
-
-        ReserveInfoVo reserveInfoVo = new ReserveInfoVo();
-        BeanUtils.copyProperties(reserveDay, reserveInfoVo);
-        Integer type = null;
-
-        List<ReserveInfoItemVo> morning = new ArrayList<>();
-        List<ReserveInfoItemVo> noon = new ArrayList<>();
-        List<ReserveInfoItemVo> night = new ArrayList<>();
-        List<ReserveInfoItemVo> midnight = new ArrayList<>();
-
-        for (ReserveInfoItemVo reserveInfoItemVo : byReserveDayIdList) {
-
-            type = reserveInfoItemVo.getType();
-
-            if (type.equals(ReserveTimeTypeEnum.MORNING.getCode())) {
-                morning.add(reserveInfoItemVo);
-            }
-
-            if (type.equals(ReserveTimeTypeEnum.NOON.getCode())) {
-                noon.add(reserveInfoItemVo);
-            }
-
-            if (type.equals(ReserveTimeTypeEnum.NIGHT.getCode())) {
-                night.add(reserveInfoItemVo);
-            }
-            if (type.equals(ReserveTimeTypeEnum.MIDNIGHT.getCode())) {
-                midnight.add(reserveInfoItemVo);
-            }
-
-        }
-
-        reserveInfoVo.setMorning(morning);
-        reserveInfoVo.setNoon(noon);
-        reserveInfoVo.setNight(night);
-        reserveInfoVo.setMidnight(midnight);
-
-        return R.succeed(reserveInfoVo);
+        ReserveInfoVo byIdInfo = reserveService.getByIdInfo(familyId, id,joinFamily);
+        return R.succeed(byIdInfo);
     }
 
 
+    @PostMapping("/list")
+    @ApiOperation("预约列表")
+    @Token
+    public R getList(@RequestBody ReserveListDto dto) throws Exception {
+        FamilyMember joinFamily = familyService.isJoinFamily(dto.getFamilyId());
+        if (joinFamily == null) {
+            return R.failed(405, "没有加入该家庭,无法查看当前预约");
+        }
+
+
+        QueryWrapper<ReserveDay> reserveDayQueryWrapper = new QueryWrapper<>();
+        reserveDayQueryWrapper.eq("family_id",dto.getFamilyId());
+        reserveDayQueryWrapper.orderByDesc("creator_time");
+
+        Page<ReserveDay> reserveDayPage = reserveDayMapper.selectPage(new Page<>(dto.getPageNum(), dto.getPageSize()), reserveDayQueryWrapper);
+
+        List<ReserveInfoVo> reserveInfoVos = new ArrayList<>();
+
+        for (ReserveDay record :  reserveDayPage.getRecords()) {
+            ReserveInfoVo byIdInfo = reserveService.getByIdInfo(record.getFamilyId(),record.getId(),null);
+            reserveInfoVos.add(byIdInfo);
+        }
+
+        PageVo<ReserveInfoVo> PageVo = new PageVo<>();
+        PageVo.setPages(reserveDayPage.getPages());
+        PageVo.setTotal(reserveDayPage.getTotal());
+        PageVo.setList(reserveInfoVos);
+        PageVo.setPageSize(reserveDayPage.getSize());
+        PageVo.setPageNum(reserveDayPage.getCurrent());
+
+        return R.succeed(PageVo);
+    }
+
+    @GetMapping("/cancel")
+    @ApiOperation("取消预约")
+    @Token
+    public R cancelById(@RequestParam("familyId") Integer familyId, @RequestParam("id") Integer id) throws Exception {
+        FamilyMember joinFamily = familyService.isJoinFamily(familyId);
+        if (joinFamily == null) {
+            return R.failed(405, "操作权限不够！");
+        }
+
+        ReserveDay reserveDay = reserveDayMapper.selectById(id);
+        reserveDay.setStatus(ReserveStatusEnum.CANCEL.getCode());
+        reserveDayMapper.updateById(reserveDay);
+        return R.succeed();
+    }
+
+    @PostMapping("/addRemark")
+    @ApiOperation("新增一条预约备注")
+    @Token
+    public R addRemark(@RequestBody AddRemarkDto dto) throws Exception {
+        ReserveDayRemark reserveDayRemark = new ReserveDayRemark();
+        reserveDayRemark.setReserveDayId(dto.getReserveDayId());
+        reserveDayRemark.setContent(dto.getContent());
+        if(dto.getParentId()!=null){
+            reserveDayRemark.setParentId(dto.getParentId());
+        }
+        reserveDayRemark.setCreatorUser(CurrentUserUtil.getUserName());
+        reserveDayRemark.setCreatorUserId(CurrentUserUtil.getUserId());
+        reserveDayRemark.setCreatorTime(new Date());
+        reserveDayRemarkMapper.insert(reserveDayRemark);
+        return R.succeed(reserveDayRemark);
+    }
 }
