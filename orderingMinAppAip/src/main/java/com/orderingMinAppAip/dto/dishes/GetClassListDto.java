@@ -4,7 +4,7 @@ package com.orderingMinAppAip.dto.dishes;
 import lombok.Data;
 
 @Data
-public class GetClassListVDto {
+public class GetClassListDto {
 
     private  Integer pageNum;
     private  Integer pageSize;
