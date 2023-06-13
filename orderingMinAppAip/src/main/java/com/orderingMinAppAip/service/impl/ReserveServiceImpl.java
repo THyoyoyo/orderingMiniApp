@@ -11,6 +11,7 @@ import com.orderingMinAppAip.model.reserve.ReserveDayInfo;
 import com.orderingMinAppAip.model.reserve.ReserveDayRemark;
 import com.orderingMinAppAip.service.ReserveService;
 import com.orderingMinAppAip.util.CurrentUserUtil;
+import com.orderingMinAppAip.vo.common.R;
 import com.orderingMinAppAip.vo.reserve.ReserveInfoItemVo;
 import com.orderingMinAppAip.vo.reserve.ReserveInfoVo;
 import org.springframework.beans.BeanUtils;
@@ -115,5 +116,13 @@ public class ReserveServiceImpl implements ReserveService {
         reserveDayRemarkQueryWrapper.eq("reserve_day_id",reserveDayId);
         List<ReserveDayRemark> reserveDayRemarks = reserveDayRemarkMapper.selectList(reserveDayRemarkQueryWrapper);
         return reserveDayRemarks;
+    }
+
+    @Override
+    public Integer isDayReserver(Date time,Integer familyId) {
+        QueryWrapper<ReserveDay> reserveDayInfoQueryWrapper = new QueryWrapper<>();
+        reserveDayInfoQueryWrapper.eq("family_id",familyId).eq("creator",time);
+        Integer integer = reserveDayMapper.selectCount(reserveDayInfoQueryWrapper);
+        return integer;
     }
 }

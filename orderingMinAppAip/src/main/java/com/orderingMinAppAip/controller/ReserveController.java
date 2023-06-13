@@ -27,8 +27,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RestController
@@ -59,18 +61,25 @@ public class ReserveController {
         if (joinFamily == null) {
             return R.failed(405, "你没有加入该家庭，不能进行预约！");
         }
+        String formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(dto.getCreator());
         Integer userId = CurrentUserUtil.getUserId();
         String userName = CurrentUserUtil.getUserName();
-
         ReserveDay reserveDay = null;
         List<ReserveDayInfo> oldReserveDayInfos = null;
+        Integer dayReserver = reserveService.isDayReserver(dto.getCreator(),dto.getFamilyId());
 
         if (dto.getId() != null) {
             reserveDay = reserveDayMapper.selectById(dto.getId());
+            if(!reserveDay.getCreator().equals(dto.getCreator()) && dayReserver > 0){
+                    return  R.failed(405,formatDate +" 已预约");
+            }
             reserveDay.setCreator(dto.getCreator());
             reserveDayMapper.updateById(reserveDay);
             oldReserveDayInfos = reserveService.delByIdInfo(dto.getId());
         } else {
+            if(dayReserver > 0){
+                return  R.failed(405,formatDate +" 已预约");
+            }
             reserveDay = new ReserveDay();
             reserveDay.setCreator(dto.getCreator());
             reserveDay.setFamilyId(dto.getFamilyId());
@@ -194,5 +203,19 @@ public class ReserveController {
         reserveDayRemark.setCreatorTime(new Date());
         reserveDayRemarkMapper.insert(reserveDayRemark);
         return R.succeed(reserveDayRemark);
+    }
+
+    @GetMapping("/isDayReserver")
+    @ApiOperation("测试")
+    @Token
+  public R isDayReserver(@RequestParam("id") Integer id  ,
+                         @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date
+                         ){
+        Integer dayReserver = reserveService.isDayReserver(date, id);
+        String formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        if(dayReserver > 0){
+            return  R.failed(405,formatDate +" 已预约");
+        }
+        return R.succeed(dayReserver);
     }
 }

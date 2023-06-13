@@ -5,6 +5,7 @@ import com.orderingMinAppAip.model.reserve.ReserveDayInfo;
 import com.orderingMinAppAip.model.reserve.ReserveDayRemark;
 import com.orderingMinAppAip.vo.reserve.ReserveInfoVo;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ReserveService {
@@ -16,4 +17,6 @@ public interface ReserveService {
     ReserveInfoVo getByIdInfo(Integer familyId, Integer id, FamilyMember joinFamily) throws Exception;
 
     List<ReserveDayRemark> getByIdRemarks(Integer reserveDayId);
+
+    Integer isDayReserver(Date time ,Integer familyId);
 }
