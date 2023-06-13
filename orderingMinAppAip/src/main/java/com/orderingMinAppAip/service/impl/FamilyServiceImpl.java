@@ -87,4 +87,12 @@ public class FamilyServiceImpl implements FamilyService {
         return familyMemberMapper.getGuestFamilys(userId);
     }
 
+    @Override
+    public List<FamilyMember> getFamilys(Integer userId) {
+        QueryWrapper<FamilyMember> familyMemberQueryWrapper = new QueryWrapper<>();
+        familyMemberQueryWrapper.eq("member_id",userId);
+        List<FamilyMember> familyMembers = familyMemberMapper.selectList(familyMemberQueryWrapper);
+        return familyMembers;
+    }
+
 }

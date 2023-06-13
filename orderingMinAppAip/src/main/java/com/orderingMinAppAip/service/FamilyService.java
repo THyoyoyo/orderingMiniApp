@@ -42,7 +42,9 @@ public interface FamilyService {
 
 
     /**
-     *  获取已加入的家庭
+     *  访客获取已加入的家庭
      * */
     List<Map<String, Object>> getGuestFamilys() throws Exception;
+
+    List<FamilyMember> getFamilys(Integer userId);
 }

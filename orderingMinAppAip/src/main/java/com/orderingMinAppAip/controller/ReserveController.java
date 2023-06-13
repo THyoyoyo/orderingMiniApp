@@ -205,17 +205,20 @@ public class ReserveController {
         return R.succeed(reserveDayRemark);
     }
 
-    @GetMapping("/isDayReserver")
-    @ApiOperation("测试")
+
+    @GetMapping("/getToday")
+    @ApiOperation("获取今日预约")
     @Token
-  public R isDayReserver(@RequestParam("id") Integer id  ,
-                         @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date date
-                         ){
-        Integer dayReserver = reserveService.isDayReserver(date, id);
-        String formatDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        if(dayReserver > 0){
-            return  R.failed(405,formatDate +" 已预约");
+    public R getToday() throws Exception {
+        Integer userId = CurrentUserUtil.getUserId();
+        List<FamilyMember> familys = familyService.getFamilys(userId);
+
+        String formatDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
+
+        for (FamilyMember family : familys) {
+
         }
-        return R.succeed(dayReserver);
+        
+        return R.succeed(formatDate);
     }
 }
