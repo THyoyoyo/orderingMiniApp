@@ -5,10 +5,12 @@ import com.orderingMinAppAip.enums.ReserveTimeTypeEnum;
 import com.orderingMinAppAip.mapper.reserve.ReserveDayInfoMapper;
 import com.orderingMinAppAip.mapper.reserve.ReserveDayMapper;
 import com.orderingMinAppAip.mapper.reserve.ReserveDayRemarkMapper;
+import com.orderingMinAppAip.model.family.Family;
 import com.orderingMinAppAip.model.family.FamilyMember;
 import com.orderingMinAppAip.model.reserve.ReserveDay;
 import com.orderingMinAppAip.model.reserve.ReserveDayInfo;
 import com.orderingMinAppAip.model.reserve.ReserveDayRemark;
+import com.orderingMinAppAip.service.FamilyService;
 import com.orderingMinAppAip.service.ReserveService;
 import com.orderingMinAppAip.util.CurrentUserUtil;
 import com.orderingMinAppAip.vo.common.R;
@@ -33,6 +35,9 @@ public class ReserveServiceImpl implements ReserveService {
 
     @Autowired
     ReserveDayRemarkMapper reserveDayRemarkMapper;
+
+    @Autowired
+    FamilyService familyService;
 
     @Override
     public List<ReserveDayInfo> delByIdInfo(Integer id) {
@@ -72,6 +77,9 @@ public class ReserveServiceImpl implements ReserveService {
             byReserveDayIdList =reserveDayInfoMapper.getByReserveDayIdList(id,null,null);
         }
 
+        Family familyInfo = familyService.getFamilyById(familyId);
+
+
         ReserveInfoVo reserveInfoVo = new ReserveInfoVo();
         BeanUtils.copyProperties(reserveDay, reserveInfoVo);
         Integer type = null;
@@ -107,6 +115,7 @@ public class ReserveServiceImpl implements ReserveService {
         reserveInfoVo.setNight(night);
         reserveInfoVo.setMidnight(midnight);
         reserveInfoVo.setRemark(this.getByIdRemarks(id));
+        reserveInfoVo.setFamilyInfo(familyInfo);
         return  reserveInfoVo;
     }
 

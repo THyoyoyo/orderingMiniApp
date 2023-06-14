@@ -6,4 +6,15 @@
 
 
 
+
+<select id="getReserveDateAllByMonth" resultType="java.util.Map">
+  select
+      rd.*
+  from
+      reserve_day as rd
+   where
+     <![CDATA[  rd.creator >= #{startDate} and rd.creator <= #{endDate} ]]>
+</select>
+
+
 </mapper>

@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orderingMinAppAip.annotation.Token;
 import com.orderingMinAppAip.dto.reserve.AddRemarkDto;
+import com.orderingMinAppAip.dto.reserve.AddTodayDisehsDto;
 import com.orderingMinAppAip.dto.reserve.ReserveListDto;
 import com.orderingMinAppAip.dto.reserve.ReserveSavaDto;
+import com.orderingMinAppAip.enums.CommTypeEnum;
 import com.orderingMinAppAip.enums.ReserveStatusEnum;
 import com.orderingMinAppAip.enums.ReserveTimeTypeEnum;
 import com.orderingMinAppAip.mapper.reserve.ReserveDayInfoMapper;
@@ -212,13 +214,61 @@ public class ReserveController {
     public R getToday() throws Exception {
         Integer userId = CurrentUserUtil.getUserId();
         List<FamilyMember> familys = familyService.getFamilys(userId);
-
         String formatDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00").format(new Date());
-
+        ArrayList<ReserveInfoVo> reserveInfoVos = new ArrayList<>();
         for (FamilyMember family : familys) {
-
+            QueryWrapper<ReserveDay> reserveDayQueryWrapper = new QueryWrapper<>();
+            reserveDayQueryWrapper.eq("family_id",family.getFamilyId()).eq("creator",formatDate);
+            reserveDayQueryWrapper.last("limit 0,1");
+            ReserveDay reserveDay = reserveDayMapper.selectOne(reserveDayQueryWrapper);
+            if(reserveDay !=null){
+                ReserveInfoVo byIdInfo = reserveService.getByIdInfo(family.getFamilyId(),reserveDay.getId(),family);
+                reserveInfoVos.add(byIdInfo);
+            }
         }
-        
-        return R.succeed(formatDate);
+        return R.succeed(reserveInfoVos);
+    }
+
+
+    @GetMapping("/addTodayDisehs")
+    @ApiOperation("今日预约菜品添加")
+    @Token
+    public R addTodayDisehs(@RequestBody AddTodayDisehsDto dto) throws Exception {
+        ReserveDayInfo reserveDayInfo = new ReserveDayInfo();
+        reserveDayInfo.setType(dto.getType());
+        reserveDayInfo.setReserveDayId(dto.getReserveDayId());
+        reserveDayInfo.setStatus(CommTypeEnum.start.getCode());
+        reserveDayInfo.setDishesId(dto.getDishesId());
+
+        reserveDayInfo.setCreatorUser(CurrentUserUtil.getUserName());
+        reserveDayInfo.setReserveDayId(CurrentUserUtil.getUserId());
+        reserveDayInfo.setCreatorTime(new Date());
+        reserveDayInfoMapper.insert(reserveDayInfo);
+
+        return R.succeed();
+    }
+
+    @GetMapping("/getReserveDateAllByMonth")
+    @ApiOperation("获取当前月份已预约的日期")
+    @Token
+    public R getReserveDateAllByMonth(@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1; // 月份从0开始，所以要加1
+
+        // 构建开始时间和结束时间
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.set(year, month - 1, 1, 0, 0, 0); // 设置为指定年份和月份的1号0点0分0秒
+        Date startDate = startCalendar.getTime();
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.set(year, month, 1, 0, 0, 0); // 设置为指定年份和月份的下个月1号0点0分0秒
+        endCalendar.add(Calendar.SECOND, -1); // 减去1秒，得到本月的最后一秒
+        Date endDate = endCalendar.getTime();
+
+        List<Map<String, Object>> reserveDateAllByMonth = reserveDayMapper.getReserveDateAllByMonth(startDate, endDate);
+
+        return R.succeed(reserveDateAllByMonth);
     }
 }

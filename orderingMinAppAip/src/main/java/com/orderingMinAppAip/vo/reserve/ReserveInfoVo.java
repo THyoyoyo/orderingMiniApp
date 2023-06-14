@@ -3,6 +3,7 @@ package com.orderingMinAppAip.vo.reserve;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.orderingMinAppAip.model.family.Family;
 import com.orderingMinAppAip.model.reserve.ReserveDayRemark;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,6 +24,10 @@ public class ReserveInfoVo {
     /** 预约家庭ID */
     @ApiModelProperty(value = "预约家庭ID")
     private Integer familyId;
+
+    /** 预约家庭信息*/
+    @ApiModelProperty(value = "预约家庭信息")
+    private Family familyInfo;
 
     /** 早上 */
     @ApiModelProperty(value = "早上")
