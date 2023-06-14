@@ -3,6 +3,7 @@ package com.orderingMinAppAip.dto.dishes;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.orderingMinAppAip.model.dishes.DishesComment;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -76,4 +77,8 @@ public class SavaDishesDto {
 
     @ApiModelProperty(value = "食材组")
     private List<String> dishesSonList;
+
+
+    @ApiModelProperty(value = "评论列表",hidden = false,required = false)
+    private  List<DishesComment> dishesComments;
 }

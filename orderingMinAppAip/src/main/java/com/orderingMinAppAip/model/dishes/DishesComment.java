@@ -42,6 +42,12 @@ public class DishesComment implements Serializable {
 	@ApiModelProperty(value = "状态（0：隐藏，1：显示）")
 	private Integer status;
 
+
+
+	/** 星级（0-5） */
+	@ApiModelProperty(value = "星级（0-5）")
+	private Integer starLevel;
+
 	/** 创建时间 */
 	@ApiModelProperty(value = "创建时间")
 	private Date creatorTime;
@@ -52,6 +58,8 @@ public class DishesComment implements Serializable {
 
 	/** 创建人ID */
 	@ApiModelProperty(value = "创建人ID")
-	private Date creatorTimeId;
+	private Integer creatorUserId;
+
+
 
 }

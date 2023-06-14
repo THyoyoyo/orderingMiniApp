@@ -4,6 +4,7 @@ package com.orderingMinAppAip.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.orderingMinAppAip.annotation.Token;
+import com.orderingMinAppAip.dto.dishes.AddCommentDto;
 import com.orderingMinAppAip.dto.dishes.GetClassListDto;
 import com.orderingMinAppAip.dto.dishes.SavaClassDto;
 import com.orderingMinAppAip.dto.dishes.SavaDishesDto;
@@ -55,6 +56,9 @@ public class DishesController {
 
     @Autowired
     DishesInfoMapper dishesInfoMapper;
+
+    @Autowired
+    DishesCommentMapper dishesCommentMapper;
 
     @PostMapping("/class/sava")
     @ApiOperation("新增编辑菜品分类")
@@ -199,6 +203,14 @@ public class DishesController {
 
         savaDishesDto.setDishesSonList(newDisheSonList);
 
+
+        QueryWrapper<DishesComment> dishesCommentQueryWrapper = new QueryWrapper<>();
+        dishesCommentQueryWrapper.eq("dishes_id",id);
+        List<DishesComment> dishesComments = dishesCommentMapper.selectList(dishesCommentQueryWrapper);
+
+        savaDishesDto.setDishesComments(dishesComments);
+
+
         return R.succeed(savaDishesDto);
     }
 
@@ -220,5 +232,21 @@ public class DishesController {
         dishesInfoQueryWrapper.eq("dishesId",id);
         dishesInfoMapper.delete(dishesInfoQueryWrapper);
         return  R.succeed();
+    }
+
+    @PostMapping("/addComment")
+    @ApiOperation("/菜品新增评价")
+    @Token
+    public R addComment(@RequestBody AddCommentDto dto) throws Exception {
+        DishesComment dishesComment = new DishesComment();
+        dishesComment.setDishesId(dto.getDishesId());
+        dishesComment.setStatus(CommTypeEnum.start.getCode());
+        dishesComment.setStarLevel(dto.getStarLevel());
+        dishesComment.setContent(dto.getContent());
+        dishesComment.setCreatorUser(CurrentUserUtil.getUserName());
+        dishesComment.setCreatorUserId(CurrentUserUtil.getUserId());
+        dishesComment.setCreatorTime(new Date());
+        dishesCommentMapper.insert(dishesComment);
+        return R.succeed(dishesComment);
     }
 }
